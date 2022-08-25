@@ -16,9 +16,21 @@ jobs:
           submodules: true
           fetch-depth: 0
       -
+        name: Purge npm/nodejs
+        run: |
+          sudo apt-get remove -y nodejs
+          sudo apt-get remove -y npm
+      -
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      -
+        name: Purge npm/nodejs
+        run: |
+          which node
+          node --version
+          which npm
+          npm --version
       -
         uses: redkubes/docusaurus-deploy-action@v1
         with:
