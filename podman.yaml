@@ -1,4 +1,6 @@
 ---
+# sudo podman play kube podman.yaml
+# sudo podman pod rm uor-framework --force
 apiVersion: v1
 kind: Pod
 metadata:
@@ -6,20 +8,20 @@ metadata:
   labels:
     app: uor-framework
   annotations:
-    io.kubernetes.cri-o.TTY/hugo: "false"
-    io.podman.annotations.init/hugo: "FALSE"
-    io.podman.annotations.label/hugo: disable
-    io.podman.annotations.autoremove/hugo: "TRUE"
-    io.podman.annotations.privileged/hugo: "FALSE"
-    io.podman.annotations.publish-all/hugo: "FALSE"
-    org.opencontainers.image.base.name/hugo: ghcr.io/uor-framework/hugo:latest
+    io.kubernetes.cri-o.TTY/site: "false"
+    io.podman.annotations.init/site: "FALSE"
+    io.podman.annotations.label/site: disable
+    io.podman.annotations.autoremove/site: "TRUE"
+    io.podman.annotations.privileged/site: "FALSE"
+    io.podman.annotations.publish-all/site: "FALSE"
+    org.opencontainers.image.base.name/site: ghcr.io/uor-framework/site:latest
 spec:
   containers:
-  - image: ghcr.io/uor-framework/hugo:latest
-    name: hugo
+  - image: ghcr.io/uor-framework/site:latest
+    name: site
     ports:
-    - containerPort: 1313
-      hostPort: 1313
+    - containerPort: 3000
+      hostPort: 3000
     securityContext:
       capabilitieskj:
         drop:

@@ -1,0 +1,24 @@
+name: github pages
+
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+      -
+        uses: redkubes/docusaurus-deploy-action@v1
+        with:
+          source-folder: website
+          git-user: uor-framework
+          git-password: ${{ secrets.GITHUB_TOKEN }}
+          deployment-branch: gh-pages

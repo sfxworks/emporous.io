@@ -1,12 +1,12 @@
-# With Podman (recommended)
-# podman build --tag ghcr.io/uor-framework/hugo ./
-# podman run -it --rm --name hugo -p 1313:1313 --volume .:/src --security-opt label=disable --pull=never ghcr.io/uor-framework/hugo
-#
-# With Docker (slow)
-# docker buildx build --file Containerfile --tag docker.io/kong/hugo:local ./
-# docker run -it --rm --name hugo --publish 1313:1313 --volume .:/src --security-opt label=disable hugo
+# With Podman (Tested on Fedora 36)
+# podman build --tag ghcr.io/uor-framework/site .
+# podman run -it --rm --name site -p 3000:3000 --volume $(pwd):/src --security-opt label=disable --pull=never ghcr.io/uor-framework/site
 
-FROM quay.io/fedora/fedora:latest AS hugo-builder
+# With Docker (Tested on MacOS)
+# docker build -f Containerfile -t ghcr.io/uor-framework/site .
+# docker run -it --rm --name site --publish 3000:3000 --volume $(pwd):/src ghcr.io/uor-framework/site
+
+FROM quay.io/fedora/fedora:latest AS builder
 
 ENV ROOTFS_PATH="/rootfs"
 ENV DNF_FLAGS="\
@@ -15,26 +15,10 @@ ENV DNF_FLAGS="\
   -y --nodocs --nogpg \
 "
 ENV RPM_LIST="\
-  # Site build dependencies
-  git \
   npm \
-  hugo \
-  ruby \
-  golang \
-  rubygems \
-  ruby-libs \
-  ruby-default-gems \
-  rubygem-asciidoctor \
-  # Base from scratch container packages
   glibc-minimal-langpack \
   coreutils-single \
   openssl \
-  # Optional developer experience packages
-  # ncurses \
-  # tmux \
-  # vim \
-  # dnf \
-  # gh \
 "
 
 RUN set -ex \
@@ -46,8 +30,7 @@ RUN set -ex \
 
 
 FROM scratch
-COPY --from=hugo-builder /rootfs /
-RUN git config --global --add safe.directory /src
+COPY --from=builder /rootfs /
 WORKDIR /src
-ENTRYPOINT ["bash", "-c", "hack/test-pages.sh"]
-LABEL org.opencontainers.image.source https://github.com/uor-framework/uor-framework.github.io
+ENTRYPOINT ["bash", "-c", "npm install && npm run start"]
+LABEL org.opencontainers.image.source https://github.com/uor-framework/universalreference.io
