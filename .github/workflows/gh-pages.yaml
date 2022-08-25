@@ -33,9 +33,16 @@ jobs:
           which npm
           npm --version
       -
-        uses: redkubes/docusaurus-deploy-action@v1
+        name: Build Site
+        run: |
+          npm install
+          npm run build
+      -
+        name: Deploy to GitHub Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
         with:
-          source-folder: .
-          git-user: uor-framework
-          git-password: ${{ secrets.GITHUB_TOKEN }}
-          deployment-branch: gh-pages
+          target_branch: gh-pages
+          build_dir: build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
