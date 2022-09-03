@@ -53,6 +53,22 @@ const config = {
     ],
   ],
 
+  plugins: [
+    function (context, options) {
+      return {
+        name: 'webpack-configuration-plugin',
+        configureWebpack(config, isServer, utils) {
+          return {
+            resolve: {
+              symlinks: false,
+            }
+          };
+        }
+      };
+    },
+  ],
+
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
