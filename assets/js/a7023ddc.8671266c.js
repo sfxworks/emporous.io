@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkuniversalreference_io=self.webpackChunkuniversalreference_io||[]).push([[713],{3457:e=>{e.exports=JSON.parse('[{"label":"uor","permalink":"/blog/tags/uor","count":1},{"label":"hello","permalink":"/blog/tags/hello","count":1}]')}}]);
