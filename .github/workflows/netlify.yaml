@@ -1,0 +1,51 @@
+# .github/workflows/netlify.yml
+name: Build and Deploy to Netlify
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      -
+        name: Purge npm/nodejs
+        run: |
+          sudo apt-get remove -y nodejs
+          sudo apt-get remove -y npm
+      -
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      -
+        name: Build Site
+        run: |
+          git submodule update --init --recursive
+          git submodule update --remote
+          npm install
+          npm run build
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: './build'
+          production-deploy: false
+          github-token: ${{ secrets.NETLIFY_BOT_GH_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-commit-comment: true
+          enable-pull-request-comment: true
+          overwrites-pull-request-comment: true
+          alias: ${{ github.head_ref }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 5
