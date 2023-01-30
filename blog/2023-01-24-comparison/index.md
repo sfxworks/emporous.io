@@ -2,7 +2,7 @@
 slug: product-comparison
 title: Product Comparison
 authors: [samwalke]
-tags: [uor, comparison]
+tags: [emporous, comparison]
 ---
 
 ![difference](./difference.jpg)
